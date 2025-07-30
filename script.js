@@ -134,3 +134,68 @@ document.getElementById('registrationForm').addEventListener('submit', function(
   e.preventDefault();
   validateForm();
 });
+document.addEventListener("DOMContentLoaded", () => {
+  const registrationForm = document.getElementById("registration-form");
+  const feedbackDiv = document.getElementById("feedback");
+
+  if (registrationForm && feedbackDiv) {
+    registrationForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      
+      // Retrieve user inputs
+      const username = registrationForm.querySelector('input[name="username"]').value.trim();
+      const email = registrationForm.querySelector('input[name="email"]').value.trim();
+      const password = registrationForm.querySelector('input[name="password"]').value.trim();
+
+      // Validate inputs
+      const { isValid, messages } = validateInputs(username, email, password);
+
+      // Display feedback
+      feedbackDiv.style.display = "block";
+      if (isValid) {
+        feedbackDiv.textContent = "Registration successful!";
+        feedbackDiv.style.color = "#28a745";
+        registrationForm.reset(); // Clear form on success
+      } else {
+        feedbackDiv.innerHTML = messages.join("<br>"); // Show errors with line breaks
+        feedbackDiv.style.color = "#dc3545";
+      }
+    });
+  } else {
+    console.error("Registration form or feedback div not found!");
+  }
+});
+
+/**
+ * Validates username, email, and password.
+ * Returns { isValid: boolean, messages: string[] }.
+ */
+function validateInputs(username, email, password) {
+  const messages = [];
+  let isValid = true;
+
+  // Username validation (min 3 chars, no spaces)
+  if (username.length < 3) {
+    messages.push("Username must be at least 3 characters long.");
+    isValid = false;
+  }
+  if (/\s/.test(username)) {
+    messages.push("Username cannot contain spaces.");
+    isValid = false;
+  }
+
+  // Email validation (basic format check)
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    messages.push("Please enter a valid email address.");
+    isValid = false;
+  }
+
+  // Password validation (min 6 chars)
+  if (password.length < 6) {
+    messages.push("Password must be at least 6 characters long.");
+    isValid = false;
+  }
+
+  return { isValid, messages };
+}
