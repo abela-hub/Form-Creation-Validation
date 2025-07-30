@@ -1,4 +1,4 @@
-// Function to handle feedback display
+
 function displayFeedback(isValid, messages) {
   const feedbackDiv = document.getElementById('feedbackDiv');
   feedbackDiv.style.display = 'block';
