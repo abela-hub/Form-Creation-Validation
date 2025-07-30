@@ -1,4 +1,15 @@
-
+document.addEventListener("DOMContentLoaded", function() {
+    // Your code that should run after the DOM is fully loaded
+    console.log("DOM fully loaded and parsed");
+    
+    // Example: Add click event to a button
+    const button = document.querySelector("#myButton");
+    if (button) {
+        button.addEventListener("click", () => {
+            alert("Button clicked!");
+        });
+    }
+});
 function displayFeedback(isValid, messages) {
   const feedbackDiv = document.getElementById('feedbackDiv');
   feedbackDiv.style.display = 'block';
