@@ -10,6 +10,32 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 });
+document.addEventListener("DOMContentLoaded", () => {
+  const registrationForm = document.getElementById("registration-form");
+
+  if (registrationForm) {
+    registrationForm.addEventListener("submit", (e) => {
+      e.preventDefault(); // Prevent default form submission
+
+      // Get form data
+      const formData = new FormData(registrationForm);
+      const userData = {
+        username: formData.get("username"),
+        email: formData.get("email"),
+        password: formData.get("password"),
+      };
+
+      // Example: Log data (replace with fetch() for backend submission)
+      console.log("Registration data:", userData);
+
+      // Optional: Display success message
+      alert("Registration successful!");
+      registrationForm.reset(); // Clear the form
+    });
+  } else {
+    console.warn("Registration form not found!");
+  }
+});
 function displayFeedback(isValid, messages) {
   const feedbackDiv = document.getElementById('feedbackDiv');
   feedbackDiv.style.display = 'block';
