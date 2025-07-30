@@ -1,54 +1,99 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('registration-form');
-    const feedbackDiv = document.getElementById('form-feedback');
-    
-    form.addEventListener('submit', function(event) {
-        event.preventDefault();
-        
-        // Get and trim input values
-        const username = document.getElementById('username').value.trim();
-        const email = document.getElementById('email').value.trim();
-        const password = document.getElementById('password').value.trim();
-        
-        // Validation variables
-        let isValid = true;
-        const messages = [];
-        
-        // Username validation (min 3 characters)
-        if (username.length < 3) {
-            isValid = false;
-            messages.push('Username must be at least 3 characters long.');
-        }
-        
-        // Email validation (must contain @ and .)
-        if (!email.includes('@') || !email.includes('.')) {
-            isValid = false;
-            messages.push('Please enter a valid email address.');
-        }
-        
-        // Password validation (min 8 characters)
-        if (password.length < 8) {
-            isValid = false;
-            messages.push('Password must be at least 8 characters long.');
-        }
-        
-        // Display feedback
-        feedbackDiv.style.display = 'block';
-        
-        if (isValid) {
-            feedbackDiv.textContent = 'Registration successful!';
-            feedbackDiv.className = 'success';
-            
-            // Optional: Clear form after successful submission
-            form.reset();
-            
-            // Optional: Hide feedback after 3 seconds
-            setTimeout(() => {
-                feedbackDiv.style.display = 'none';
-            }, 3000);
-        } else {
-            feedbackDiv.innerHTML = messages.join('<br>');
-            feedbackDiv.className = '';
-        }
-    });
+// Function to handle feedback display
+function displayFeedback(isValid, messages) {
+  const feedbackDiv = document.getElementById('feedbackDiv');
+  feedbackDiv.style.display = 'block';
+  
+  if (isValid) {
+    feedbackDiv.textContent = 'Registration successful!';
+    feedbackDiv.style.color = '#28a745';
+  } else {
+    feedbackDiv.innerHTML = messages.join('<br>');
+    feedbackDiv.style.color = '#dc3545';
+  }
+}
+
+// Validation functions
+function validateUsername(username) {
+  const errors = [];
+  
+  if (!username) {
+    errors.push('Username is required');
+  } else {
+    if (username.length < 4) {
+      errors.push('Username must be at least 4 characters');
+    }
+    if (username.length > 20) {
+      errors.push('Username must be less than 20 characters');
+    }
+    if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+      errors.push('Username can only contain letters, numbers, and underscores');
+    }
+  }
+  
+  return errors;
+}
+
+function validatePassword(password) {
+  const errors = [];
+  
+  if (!password) {
+    errors.push('Password is required');
+  } else {
+    if (password.length < 8) {
+      errors.push('Password must be at least 8 characters');
+    }
+    if (!/[A-Z]/.test(password)) {
+      errors.push('Password must contain at least one uppercase letter');
+    }
+    if (!/[a-z]/.test(password)) {
+      errors.push('Password must contain at least one lowercase letter');
+    }
+    if (!/[0-9]/.test(password)) {
+      errors.push('Password must contain at least one number');
+    }
+    if (!/[^A-Za-z0-9]/.test(password)) {
+      errors.push('Password must contain at least one special character');
+    }
+  }
+  
+  return errors;
+}
+
+function validateEmail(email) {
+  const errors = [];
+  
+  if (!email) {
+    errors.push('Email is required');
+  } else {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      errors.push('Please enter a valid email address');
+    }
+  }
+  
+  return errors;
+}
+
+// Main validation function
+function validateForm() {
+  const username = document.getElementById('username').value;
+  const password = document.getElementById('password').value;
+  const email = document.getElementById('email').value;
+  
+  const usernameErrors = validateUsername(username);
+  const passwordErrors = validatePassword(password);
+  const emailErrors = validateEmail(email);
+  
+  const allErrors = [...usernameErrors, ...passwordErrors, ...emailErrors];
+  const isValid = allErrors.length === 0;
+  
+  displayFeedback(isValid, allErrors);
+  
+  return isValid;
+}
+
+// Example usage with a form submit event
+document.getElementById('registrationForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  validateForm();
 });
